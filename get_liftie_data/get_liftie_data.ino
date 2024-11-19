@@ -11,7 +11,7 @@
 const char *api_url = "http://liftie.dejong.cc:7070/resort/lesarcs";
 
 const long utcOffsetInSeconds = 3600;
-const unsigned long updateInterval = 10000;  // 65 seconds
+const unsigned long updateInterval = 65000;  // 65 seconds
 
 // Globals
 CRGB leds[NUM_LEDS];
@@ -41,7 +41,6 @@ void configModeCallback(WiFiManager *myWiFiManager);
 String fetchLiftData();
 void parseAndDisplayLiftData(const String &payload);
 void updateLEDStatus(const char *status, int index);
-void startupLEDsTest();
 
 void setup() {
   Serial.begin(115200);
