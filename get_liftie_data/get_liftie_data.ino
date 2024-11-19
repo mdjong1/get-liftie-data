@@ -11,7 +11,7 @@
 const char *api_url = "http://liftie.dejong.cc:7070/resort/lesarcs";
 
 const long utcOffsetInSeconds = 3600;
-const unsigned long updateInterval = 65000;  // 65 seconds
+const unsigned long updateInterval = 10000;  // 65 seconds
 
 // Globals
 CRGB leds[NUM_LEDS];
@@ -41,13 +41,14 @@ void configModeCallback(WiFiManager *myWiFiManager);
 String fetchLiftData();
 void parseAndDisplayLiftData(const String &payload);
 void updateLEDStatus(const char *status, int index);
+void startupLEDsTest();
 
 void setup() {
   Serial.begin(115200);
 
   FastLED.addLeds<WS2812B, DATA_PIN, GRB>(leds, NUM_LEDS);
   FastLED.setBrightness(60);
-  FastLED.clear();
+  FastLED.clear(true);
   FastLED.show();
 
   // Set callback for entering configuration mode
@@ -90,7 +91,7 @@ void loop() {
     timeClient.update();
     int currentHour = timeClient.getHours();
 
-    if (currentHour >= 8 && currentHour <= 18) {
+    if (currentHour >= 8 && currentHour <= 17) {  // From 8 until 18
       String payload = fetchLiftData();
       if (!payload.isEmpty()) {
         parseAndDisplayLiftData(payload);
@@ -101,6 +102,7 @@ void loop() {
       FastLED.show();
     }
   }
+  delay(1000);
 }
 
 // Callback for when entering configuration mode
@@ -188,7 +190,7 @@ void updateLEDStatus(const char *status, String liftName) {
 
   for (int i = 0; i < LiftCount; i++) {
     if (strcmp(liftNames[i], liftName.c_str()) == 0) {
-      ledIndex = i;
+      ledIndex = i + 1;
       break;
     }
   }
@@ -196,7 +198,7 @@ void updateLEDStatus(const char *status, String liftName) {
   CRGB newColor;
   const char *colorName;
 
-  if (!status || ledIndex < 0 || ledIndex >= NUM_LEDS) {
+  if (!status) {
     newColor = CRGB::Black;
     colorName = "Black";
   } else if (strcmp(status, "open") == 0) {
@@ -205,17 +207,17 @@ void updateLEDStatus(const char *status, String liftName) {
   } else if (strcmp(status, "closed") == 0) {
     newColor = CRGB::Red;
     colorName = "Red";
-  } else if (strcmp(status, "hold") == 0) {
+  } else if (strcmp(status, "hold") == 0 || strcmp(status, "scheduled") == 0) {
     newColor = CRGB::Yellow;
     colorName = "Yellow";
   } else {
-    newColor = CRGB::Orange;
-    colorName = "Orange";
-    Serial.printf("WARNING: Unknown status '%s', defaulting to Orange\n", status);
+    newColor = CRGB::Black;
+    colorName = "Black";
   }
 
-  Serial.printf("Updated LED for lift '%s' with LED index '%d' status: %s\n", liftName.c_str(), ledIndex, status);
+  Serial.printf("Updated LED for lift '%s' with LED index '%d' to color '%s' for status '%s'\n", liftName.c_str(), ledIndex, colorName, status);
 
-
-  leds[ledIndex + 1] = newColor;
+  if (ledIndex > 0 && ledIndex <= NUM_LEDS) {
+    leds[ledIndex] = newColor;
+  }
 }
