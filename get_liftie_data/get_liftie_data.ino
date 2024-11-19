@@ -7,6 +7,7 @@
 
 #define NUM_LEDS 49
 #define DATA_PIN 23
+#define TRAIL_LENGTH 5
 
 const char *api_url = "http://liftie.dejong.cc:7070/resort/lesarcs";
 
@@ -79,7 +80,7 @@ void setup() {
 void loop() {
   leds[0] = CRGB::Black;
   FastLED.show();
-  
+
   if (WiFi.status() != WL_CONNECTED) {
     Serial.println("WiFi connection lost. Waiting for reconnect...");
     delay(1000);
@@ -114,14 +115,26 @@ void configModeCallback(WiFiManager *myWiFiManager) {
   Serial.println(myWiFiManager->getConfigPortalSSID());
 
   // Visual indicator for config mode - blue blinking LED
-  for (int i = 0; i < NUM_LEDS; i++) {
-    leds[i] = CRGB::Blue;
+  for (int i = 0; i < NUM_LEDS + TRAIL_LENGTH; i++) {
+    // Turn on the LEDs in the trail
+    for (int j = 0; j < TRAIL_LENGTH; j++) {
+      int index = i - j;  // Calculate the index of the trailing LED
+      if (index >= 0 && index < NUM_LEDS) {
+        leds[index] = CRGB::Blue;  // Set the LED to blue
+      }
+    }
+
+    FastLED.show();
+    delay(50);  // Adjust the delay to control the speed of the trail
+
+    // Turn off the LEDs outside the trail
+    for (int j = 0; j < TRAIL_LENGTH; j++) {
+      int index = i - j - 1;  // Calculate the index of the LED to turn off
+      if (index >= 0 && index < NUM_LEDS) {
+        leds[index] = CRGB::Black;  // Turn off the LED
+      }
+    }
   }
-  FastLED.show();
-  delay(500);
-  FastLED.clear();
-  FastLED.show();
-  delay(500);
 }
 
 // Rest of the functions remain the same
