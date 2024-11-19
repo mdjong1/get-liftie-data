@@ -24,13 +24,13 @@ unsigned long lastUpdate = 0;
 
 const char *liftNames[] = {
   "Millerette", "Funiculaire", "Tommelet", "Combettes", "Vezaille",
-  "Cachette", "Mont Blanc.", "Clocheret", "Snowpark", "Arpette",
+  "Cachette", "Mont Blanc", "Clocheret", "Snowpark", "Arpette",
   "Carreley", "Vagere", "Charmettoger", "Transarc 1", "Villards",
   "Jardin Alpin", "Grizzly", "Lonzagne", "Vanoise Express Montchavin", "Parchey",
   "Peisey", "Vallandry", "Combe", "Cabri", "2300", "1Er Virages", "Derby",
-  "Transarc 2", "Plan Vert.", "Plagnettes", "Grand Col.", "Arcabulle",
-  "Eterlou", "Bois De L'ours.", "Marmottes", "Varet", "Aiguille Rouge..",
-  "St Jacques.", "Lanchettes", "Lac Des Combes", "Cabriolet", "Pre St Esprit",
+  "Transarc 2", "Plan Vert", "Plagnettes", "Grand Col", "Arcabulle",
+  "Eterlou", "Bois De L'ours", "Marmottes", "Varet", "Aiguille Rouge",
+  "St Jacques", "Lanchettes", "Lac Des Combes", "Cabriolet", "Pre St Esprit",
   "Comborciere", "Rhonaz", "Droset", "Plan Des Violettes", "Replat"
 };
 
