@@ -77,6 +77,9 @@ void setup() {
 }
 
 void loop() {
+  leds[0] = CRGB::Black;
+  FastLED.show();
+  
   if (WiFi.status() != WL_CONNECTED) {
     Serial.println("WiFi connection lost. Waiting for reconnect...");
     delay(1000);
